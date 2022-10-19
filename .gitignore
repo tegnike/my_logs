@@ -1,0 +1,9 @@
+.bash_history
+.bundle
+.solargraph
+.atom
+.vscode
+.viminfo
+.tmp
+/db
+/log

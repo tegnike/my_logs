@@ -1,0 +1,39 @@
+version: '3'
+services:
+  db:
+    container_name: my_logs_mysql
+    platform: linux/x86_64
+    image: mysql:8.0.30
+    command: >
+      mysqld
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./db/mysql/volumes:/var/lib/mysql
+      - ./.tmp/db:/tmp
+
+  web:
+    container_name: my_logs_web
+    build: ./rails
+    environment:
+      HOME: /app
+      RAILS_ENV: development
+    volumes:
+      - ./rails:/app:cached
+      - ./rails/bundle:/usr/local/bundle:cached
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    tty: true
+    links:
+      - db
+    command: bash -c "bundle install && rails s -b '0.0.0.0'"
+
+volumes:
+  bundle:
+    driver: local
