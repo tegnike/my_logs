@@ -8,6 +8,12 @@ Rails.application.routes.draw do
 
       # Defines the root path route ("/")
       # root "articles#index"
+
+      post "/graphql", to: "graphql#execute"
     end
+  end
+
+  if Rails.env.development?
+    mount GraphiQL::Rails::Engine, at: "/graphiql", graphql_path: "api/v1/graphql"
   end
 end
